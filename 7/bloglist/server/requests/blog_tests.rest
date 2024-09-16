@@ -1,0 +1,91 @@
+# Add the first user (mluukkai)
+POST http://localhost:3003/api/users
+Content-Type: application/json
+
+{
+  "username": "mluukkai",
+  "password": "salainen",
+  "name": "Matti Luukkainen"
+}
+
+###
+
+# Add the second user (root)
+POST http://localhost:3003/api/users
+Content-Type: application/json
+
+{
+  "username": "root",
+  "password": "123",
+  "name": "Perse"
+}
+
+###
+
+# Log in as mluukkai
+POST http://localhost:3003/api/login
+Content-Type: application/json
+
+{
+  "username": "mluukkai",
+  "password": "salainen"
+}
+
+###
+
+# Add a blog (while logged in as mluukkai)
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+Authorization: Bearer <token-from-login-response>
+
+{
+  "title": "My First Blog",
+  "author": "Jane Doe",
+  "url": "http://example.com/blog",
+  "likes": 10
+}
+
+###
+
+# Add another blog (while logged in as mluukkai)
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+Authorization: Bearer <token-from-login-response>
+
+{
+  "title": "Another Blog Post",
+  "author": "John Smith",
+  "url": "http://example.com/another-blog",
+  "likes": 5
+}
+
+###
+
+# Log in as root
+POST http://localhost:3003/api/login
+Content-Type: application/json
+
+{
+  "username": "root",
+  "password": "123"
+}
+
+###
+
+# Add a blog (while logged in as root)
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+Authorization: Bearer <token-from-login-response>
+
+{
+  "title": "Blog by Root",
+  "author": "John Smith",
+  "url": "http://example.com/root-blog",
+  "likes": 5
+}
+
+###
+
+# Get all blogs
+GET http://localhost:3003/api/blogs
+Accept: application/json
