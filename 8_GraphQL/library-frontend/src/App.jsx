@@ -1,11 +1,26 @@
 import { useState } from "react";
-import { useQuery, useApolloClient } from '@apollo/client'
+import { useQuery, useApolloClient, useSubscription } from '@apollo/client'
 import Authors from "./components/Authors";
 import Books from "./components/Books";
 import NewBook from "./components/NewBook";
 import LoginForm from "./components/LoginForm";
-import { ALL_AUTHORS } from './queries'
-import { ALL_BOOKS } from './queries'
+import { ALL_AUTHORS, ALL_BOOKS, BOOK_ADDED} from './queries'
+
+export const updateCache = (cache, query, addedBook) => {
+  const uniqByName = (a) => {
+    let seen = new Set()
+    return a.filter((item) => {
+      let k = item.title
+      return seen.has(k) ? false : seen.add(k)
+    })
+  }
+
+  cache.updateQuery(query, ({ allBooks }) => {
+    return {
+      allBooks: uniqByName(allBooks.concat(addedBook)),
+    }
+  })
+}
 
 const App = () => {
   const [page, setPage] = useState("authors");
@@ -14,6 +29,14 @@ const App = () => {
   const [token, setToken] = useState(null)
   const client = useApolloClient()
   const [userInfo, setUserInfo] = useState(null);
+
+  useSubscription(BOOK_ADDED, {
+    onSubscriptionData: ({ subscriptionData }) => {
+      console.log("Subscription Data:", subscriptionData);
+      const addedBook = subscriptionData.data.bookAdded;
+      updateCache(client.cache, { query: ALL_BOOKS }, addedBook);
+    }
+  });
 
   const logout = () => {
     setToken(null)
@@ -25,9 +48,6 @@ const App = () => {
   if (authors.loading || books.loading)  {
     return <div>loading...</div>
   }
-
-  console.log("local", localStorage)
-  console.log("token", token)
 
 
   if (!token) {

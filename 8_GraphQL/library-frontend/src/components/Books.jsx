@@ -9,9 +9,6 @@ const Books = ({ show, token, userInfo }) => {
     variables: { genre: filter || null},
   });
 
-  console.log("filter", filter)
-  console.log("user", userInfo)
-
   useEffect(() => {
     if (token && userInfo) {
       setFilter(userInfo.favoriteGenre); 
