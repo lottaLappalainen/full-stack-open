@@ -29,7 +29,7 @@ const Authors = ({show, authors}) => {
     setBorn('');
   };
 
-  if (!show) {
+  if (!show || !authors) {
     return null
   }
 
