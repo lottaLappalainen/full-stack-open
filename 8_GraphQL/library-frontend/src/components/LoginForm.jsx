@@ -18,18 +18,18 @@ const LoginForm = ({ show, setToken, setUserInfo }) => {
   });
 
   useEffect(() => {
-    if (result?.data) {
+    if (result.data) {
       const token = result.data.login.value;
       setToken(token);
       localStorage.setItem('phonenumbers-user-token', token);
       getUser().then((response) => {
         if (response.data) {
-          setUserInfo(response.data.me); // Set user info in the parent
+          setUserInfo(response.data.me); 
         }
       }); 
 
     }
-  }, [result, setToken, getUser]);
+  }, [result.data]);
 
   const submit = async (event) => {
     event.preventDefault();
