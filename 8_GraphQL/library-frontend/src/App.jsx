@@ -31,12 +31,11 @@ const App = () => {
   const [userInfo, setUserInfo] = useState(null);
 
   useSubscription(BOOK_ADDED, {
-    onSubscriptionData: ({ subscriptionData }) => {
-      console.log("Subscription Data:", subscriptionData);
-      const addedBook = subscriptionData.data.bookAdded;
-      updateCache(client.cache, { query: ALL_BOOKS }, addedBook);
+    onData: ({ data }) => {
+      console.log(data)
+      window.alert(`${data.data.bookAdded.title} was added`)
     }
-  });
+  })
 
   const logout = () => {
     setToken(null)
